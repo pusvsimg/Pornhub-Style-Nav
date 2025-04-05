@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#121212"/>
 <title>Pornhub Style Nav</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
@@ -33,10 +34,12 @@ header h1 {
   font-size:2.5rem;
   font-weight:800;
 }
-header 。orange {
+header .orange {
   background: linear-gradient(90deg,var(--orange),var(--orange2));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* 导航栏 */
@@ -62,7 +65,7 @@ nav a {
   color:var(--subtle);
   text-decoration:none;
   font-weight:500;
-  transition:.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 nav a:hover {
   background: rgba(255,153,0,0.2);
@@ -92,6 +95,10 @@ nav a.active {
   padding:.7rem;
   border-radius:50%;
   font-size:1.3rem;
+  transition: transform 0.3s ease;
+}
+.category-title:hover i {
+  transform: scale(1.1);
 }
 
 /* 卡片网格 */
@@ -162,10 +169,118 @@ footer nav a:hover{
   color:var(--orange);
 }
 
-/* 响应 */
+/* 返回顶部按钮 */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: linear-gradient(135deg,var(--orange),var(--orange2));
+  color: #000;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: .3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  z-index: 99;
+}
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(255,153,0,0.4);
+}
+
+/* 移动导航按钮 */
+.nav-toggle {
+  display: none;
+  background: linear-gradient(135deg,var(--orange),var(--orange2));
+  color: #000;
+  border: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+
+/* 响应式设计 */
 @media(max-width:768px){
   header h1{font-size:2rem}
   .category-title{font-size:1.4rem}
+  
+  /* 导航栏调整 */
+  nav {
+    padding: 1rem;
+    position: relative;
+  }
+  
+  .nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  nav ul {
+    flex-direction: column;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+  
+  nav ul.open {
+    max-height: 500px;
+  }
+  
+  nav li {
+    width: 100%;
+    margin: 0.3rem 0;
+  }
+  
+  nav a {
+    display: block;
+    text-align: center;
+    padding: 0.8rem;
+  }
+  
+  /* 卡片网格调整 */
+  .link-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+  
+  .link-card {
+    padding: 1.2rem 0.8rem;
+  }
+}
+
+@media(max-width:480px){
+  header h1{font-size:1.8rem}
+  .category-title{font-size:1.2rem}
+  .link-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.8rem;
+  }
+  .link-card i {
+    padding: 0.6rem;
+    font-size: 1.4rem;
+  }
+  .link-card h3 {
+    font-size: 0.9rem;
+  }
 }
 </style>
 </head>
@@ -177,6 +292,7 @@ footer nav a:hover{
 </header>
 
 <nav>
+<button class="nav-toggle" aria-label="切换导航菜单"><i class="fas fa-bars"></i></button>
 <ul>
 <li><a class="active" href="#ai">AI搜索</a></li>
 <li><a href="#social">社交</a></li>
@@ -185,6 +301,7 @@ footer nav a:hover{
 <li><a href="#dev">开发</a></li>
 <li><a href="#storage">存储</a></li>
 <li><a href="#email">邮箱</a></li>
+<li><a href="#learning">学习</a></li>
 </ul>
 </nav>
 
@@ -209,6 +326,7 @@ footer nav a:hover{
 <div class="link-card"><i class="fas fa-language"></i><h3>翻译</h3><a href="https://translate.google.com" target="_blank"></a></div>
 <div class="link-card"><i class="fas fa-calendar-days"></i><h3>日历</h3><a href="https://calendar.google.com" target="_blank"></a></div>
 <div class="link-card"><i class="fas fa-map-location-dot"></i><h3>地图</h3><a href="https://maps.google.com" target="_blank"></a></div>
+<div class="link-card"><i class="fab fa-cloudflare"></i><h3>Cloudflare</h3><a href="https://cloudflare.com" target="_blank"></a></div>
 </section>
 
 <h2 class="category-title" id="news"><i class="fas fa-newspaper"></i>资讯</h2>
@@ -216,16 +334,18 @@ footer nav a:hover{
 <div class="link-card"><i class="fas fa-newspaper"></i><h3>TechCrunch</h3><a href="https://techcrunch.com" target="_blank"></a></div>
 <div class="link-card"><i class="fas fa-microchip"></i><h3>The Verge</h3><a href="https://theverge.com" target="_blank"></a></div>
 <div class="link-card"><i class="fas fa-wifi"></i><h3>Wired</h3><a href="https://wired.com" target="_blank"></a></div>
+<div class="link-card"><i class="fas fa-shield-alt"></i><h3>V2EX</h3><a href="https://v2ex.com" target="_blank"></a></div>
 </section>
 
 <h2 class="category-title" id="dev"><i class="fas fa-code"></i>开发</h2>
 <section class="link-grid">
 <div class="link-card"><i class="fab fa-github"></i><h3>GitHub</h3><a href="https://github.com" target="_blank"></a></div>
 <div class="link-card"><i class="fab fa-stack-overflow"></i><h3>Stack Overflow</h3><a href="https://stackoverflow.com" target="_blank"></a></div>
+<div class="link-card"><i class="fas fa-terminal"></i><h3>Stack Overflow</h3><a href="https://stackoverflow.com" target="_blank"></a></div>
 <div class="link-card"><i class="fab fa-dev"></i><h3>Dev.to</h3><a href="https://dev.to" target="_blank"></a></div>
 </section>
 
-<h2 class="category-title" id="storage"><i class="fas fa-cloud"></i>存储</h2>
+<h2 class="category-title" id="storage"><i class="fas fa-database"></i>存储</h2>
 <section class="link-grid">
 <div class="link-card"><i class="fab fa-dropbox"></i><h3>Dropbox</h3><a href="https://dropbox.com" target="_blank"></a></div>
 <div class="link-card"><i class="fab fa-google-drive"></i><h3>Google Drive</h3><a href="https://drive.google.com" target="_blank"></a></div>
@@ -240,10 +360,17 @@ footer nav a:hover{
 <div class="link-card"><i class="fab fa-qq"></i><h3>QQ邮箱</h3><a href="https://mail.qq.com" target="_blank"></a></div>
 <div class="link-card"><i class="fas fa-shield-halved"></i><h3>ProtonMail</h3><a href="https://proton.me/mail" target="_blank"></a></div>
 </section>
+
+<h2 class="category-title" id="learning"><i class="fas fa-book-open"></i>学习</h2>
+<section class="link-grid">
+<div class="link-card"><i class="fab fa-youtube"></i><h3>YouTube</h3><a href="https://youtube.com" target="_blank"></a></div>
+<div class="link-card"><i class="fab fa-wikipedia-w"></i><h3>Wikipedia</h3><a href="https://wikipedia.org" target="_blank"></a></div>
+<div class="link-card"><i class="fas fa-graduation-cap"></i><h3>Coursera</h3><a href="https://www.coursera.org/" target="_blank"></a></div>
+</section>
 </main>
 
 <footer>
-<p>© 2024 Pornhub Style Nav. All rights reserved.</p>
+<p>&copy; 2024 Your Nav Hub. All rights reserved.</p>
 <nav>
 <a href="#">隐私政策</a>
 <a href="#">使用条款</a>
@@ -251,15 +378,89 @@ footer nav a:hover{
 </nav>
 </footer>
 
+<!-- 返回顶部按钮 -->
+<a href="#" class="back-to-top" aria-label="返回顶部"><i class="fas fa-arrow-up"></i></a>
+
 <script>
-const links = document.querySelectorAll('nav a');
-const sections = document.querySelectorAll('main h2[id]');
-window.addEventListener('scroll', ()=>{
-  let id='';
-  sections.forEach(s=>{
-    if(scrollY >= s.offsetTop - 100) id = s.id;
-  });
-  links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+id));
+document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('nav ul li a');
+    const sections = document.querySelectorAll('main .category-title');
+    const navHeight = document.querySelector('nav').offsetHeight;
+    const offset = navHeight + 30; // 额外的偏移量，使高亮更精确
+
+    function changeNavHighlight() {
+        let currentSectionId = '';
+        const scrollPosition = window.scrollY;
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            // 检查当前滚动位置是否在某个 section 的范围内
+            if (scrollPosition >= sectionTop - offset) {
+                currentSectionId = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            // href 格式是 #id，我们需要去掉 # 来匹配 section id
+            if (link.getAttribute('href').substring(1) === currentSectionId) {
+                link.classList.add('active');
+            }
+        });
+
+        // 如果滚动到顶部，则默认高亮第一个
+        if (scrollPosition < sections[0].offsetTop - offset && currentSectionId === '') {
+             if(navLinks.length > 0) {
+                 navLinks[0].classList.add('active');
+             }
+        }
+        // 如果没有任何 section 匹配 (例如在页面底部空白区域)，确保最后一个高亮
+        // 或者直接使用上面找到的 currentSectionId 即可，因为它是最后一个满足条件的 section
+    }
+
+    // 初始加载时调用一次，确保刷新页面时状态正确
+    changeNavHighlight();
+
+    // 监听滚动事件
+    window.addEventListener('scroll', function() {
+        changeNavHighlight();
+        toggleBackToTopButton();
+    });
+    
+    // 返回顶部按钮显示/隐藏
+    function toggleBackToTopButton() {
+        const backToTopBtn = document.querySelector('.back-to-top');
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    }
+    
+    // 初始检查返回顶部按钮
+    toggleBackToTopButton();
+    
+    // 移动端导航菜单切换
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('nav ul');
+    
+    navToggle.addEventListener('click', function() {
+        navMenu.classList.toggle('open');
+        const isOpen = navMenu.classList.contains('open');
+        navToggle.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        navToggle.setAttribute('aria-expanded', isOpen);
+    });
+    
+    // 点击导航链接后关闭菜单
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                navMenu.classList.remove('open');
+                navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                navToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    });
 });
 </script>
 
